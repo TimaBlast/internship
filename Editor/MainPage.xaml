@@ -14,14 +14,31 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0">
-            <Grid>
+            <Grid Name="Func">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="10"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*"/>
+
                 </Grid.RowDefinitions>
                 <Button Grid.Column ="0" Grid.Row="0" x:Name="OpenFile" MinHeight="80" MinWidth="140" Click="OpenFile_OnClick">
                     <Button.Content>
@@ -42,7 +59,38 @@
                 
             </Grid>
         </StackPanel>
-        <ListBox Grid.Column ="1" Grid.Row= "0" Name= "Sobject" />
+        <ScrollViewer Grid.Column ="1" Grid.Row= "0">
+            <ScrollViewer.Content>
+                <Grid Name="Table">
+                    <Grid.RowDefinitions>                       
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Name ="qweewq" HorizontalAlignment="Center" Grid.Column ="0" Grid.Row= "0" Text="Name-EN"/>
+                    <TextBlock HorizontalAlignment="Center" Grid.Column ="1" Grid.Row= "0" Text="Value-EN"/>
+                    <TextBlock HorizontalAlignment="Center" Grid.Column ="2" Grid.Row= "0" Text="Name-AR"/>
+                    <TextBlock HorizontalAlignment="Center" Grid.Column ="3" Grid.Row= "0" Text="Value-AR"/>
+                    <TextBlock HorizontalAlignment="Center" Grid.Column ="4" Grid.Row= "0" Text="Name-MN"/>
+                    <TextBlock HorizontalAlignment="Center" Grid.Column ="5" Grid.Row= "0" Text="Value-MN"/>
+                    <TextBlock HorizontalAlignment="Center" Grid.Column ="6" Grid.Row= "0" Text="Name-RU"/>
+                    <TextBlock HorizontalAlignment="Center" Grid.Column ="7" Grid.Row= "0" Text="Value-RU"/>
+
+                </Grid>
+            </ScrollViewer.Content>
+        </ScrollViewer>
+        
+        
 
 
 

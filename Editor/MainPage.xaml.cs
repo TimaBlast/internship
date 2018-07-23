@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Collections.ObjectModel;
@@ -29,210 +30,173 @@ namespace Editor
         {
             this.InitializeComponent();
         }
-       // SplitView temp;
-        string[] sEN, sAR, sMN, sRU;
-        ListBox CaseNameEN, CaseNameAR, CaseNameMN, CaseNameRU, TranslEN, TranslAR, TranslMN, TranslRU;
-        List<int> numberEN, numberAR, numberMN, numberRU;
-        private async void OpenFile_OnClick(object sender, RoutedEventArgs e)
+        ArrayList Lang = new ArrayList();
+        TextBox[] Work1, Work2, Work3, Work4;
+        Dictionary<string, string> WorkEN, WorkAR, WorkMN, WorkRU;
+        private void OpenFile_OnClick(object sender, RoutedEventArgs e)
         {
-            FolderPicker folderPicker = new FolderPicker();
-            folderPicker.SuggestedStartLocation = PickerLocationId.Desktop;
-            folderPicker.FileTypeFilter.Add("*");
-            StorageFolder folder = await folderPicker.PickSingleFolderAsync();
-            if (folder != null)
+            // Dictionary<string, Dictionary<string, string>> Library = new Dictionary<string, Dictionary<string, string>>();
+            Lang = Parsel.Parser(0);
+            for(int i=0; i<4; i++)
             {
-                StorageFile FileEN = await folder.GetFileAsync("Messages.lst");
-                if (FileEN != null)
+                if(Parsel.err[i]!=null)
                 {
-                    var stream = await FileEN.OpenAsync(FileAccessMode.Read);
-                    using (StreamReader reader = new StreamReader(stream.AsStream()))
-                    {
-                        numberEN = new List<int>();
-                        CaseNameEN = new ListBox();
-                        TranslEN = new ListBox();
-                        sEN = reader.ReadToEnd().Split('\n');
-                        for(int i=0; i<sEN.Length-1; i++)
-                        {
-                            if(sEN[i]!=null)
-                            {
-                                if (sEN[i]!= "\r" && sEN[i][0] != '#')
-                                {
-                                    string[] temp;
-                                    temp = sEN[i].Split('=');
-                                    CaseNameEN.Items.Add(temp[0]);
-                                    TranslEN.Items.Add(temp[1]);
-                                    numberEN.Add(i);
-                                }
-                            }
-                        }
-                    }
-                }
-                StorageFile FileAR = await folder.GetFileAsync("Messages-ar.lst");
-                if (FileAR != null)
-                {
-                    var stream = await FileAR.OpenAsync(FileAccessMode.Read);
-                    using (StreamReader reader = new StreamReader(stream.AsStream()))
-                    {
-                        numberAR = new List<int>();
-                        CaseNameAR = new ListBox();
-                        TranslAR = new ListBox();
-                        sAR = reader.ReadToEnd().Split('\n');
-                        for (int i = 0; i < sAR.Length - 1; i++)
-                        {
-                            if (sAR[i] != null)
-                            {
-                                if (sAR[i] != "\r" && sAR[i][0] != '#')
-                                {
-                                    string[] temp;
-                                    temp = sAR[i].Split('=');
-                                    CaseNameAR.Items.Add(temp[0]);
-                                    TranslAR.Items.Add(temp[1]);
-                                    numberAR.Add(i);
-                                }
-                            }
-                        }
-                    }
-                }
-                StorageFile FileMN = await folder.GetFileAsync("Messages-mn.lst");
-                if (FileMN != null)
-                {
-                    var stream = await FileMN.OpenAsync(FileAccessMode.Read);
-                    using (StreamReader reader = new StreamReader(stream.AsStream()))
-                    {
-                        numberMN = new List<int>();
-                        CaseNameMN = new ListBox();
-                        TranslMN = new ListBox();
-                        sMN = reader.ReadToEnd().Split('\n');
-                        for (int i = 0; i < sMN.Length - 1; i++)
-                        {
-                            if (sMN[i] != null)
-                            {
-                                if (sMN[i] != "\r" && sMN[i][0] != '#')
-                                {
-                                    string[] temp;
-                                    temp = sMN[i].Split('=');
-                                    CaseNameMN.Items.Add(temp[0]);
-                                    TranslMN.Items.Add(temp[1]);
-                                    numberMN.Add(i);
-                                }
-                            }
-                        }
-                    }
-                }
-                StorageFile FileRU = await folder.GetFileAsync("Messages-ru.lst");
-                if (FileRU != null)
-                {
-                    var stream = await FileRU.OpenAsync(FileAccessMode.Read);
-                    using (StreamReader reader = new StreamReader(stream.AsStream()))
-                    {
-                        numberRU = new List<int>();
-                        CaseNameRU = new ListBox();
-                        TranslRU = new ListBox();
-                        sRU = reader.ReadToEnd().Split('\n');
-                        for (int i = 0; i < sRU.Length - 1; i++)
-                        {
-                            if (sRU[i] != null)
-                            {
-                                if (sRU[i] != "\r" && sRU[i][0] != '#')
-                                {
-                                    string[] temp;
-                                    temp = sRU[i].Split('=');
-                                    CaseNameRU.Items.Add(temp[0]);
-                                    TranslRU.Items.Add(temp[1]);
-                                    numberRU.Add(i);
-                                }
-                            }
-                        }
-                    }
-                }
-                for (int i=0; i<CaseNameEN.Items.Count; i++)
-                {
-                    Button ContentS = new Button();
-                    ContentS.Content = CaseNameEN.Items[i].ToString();
-                    ContentS.HorizontalAlignment = HorizontalAlignment.Center;
-                    ContentS.Click += Button_Click;
-                  //  ColumnDefinition colDef1= new ColumnDefinition();
-                    Grid PaneS = new Grid();
-                  //  PaneS.ColumnDefinitions.Add(colDef1);
-                    TextBox WorkEN = new TextBox() { Text = TranslEN.Items[i].ToString() };
-                    TextBox WorkAR = new TextBox() { Text = TranslAR.Items[i].ToString() };
-                    //TextBox WorkMN = new TextBox() { Text = TranslMN.Items[i].ToString() };
-                    TextBox WorkRU = new TextBox() { Text = TranslRU.Items[i].ToString() };
-                    PaneS.Children.Add(WorkEN);
-                    PaneS.Children.Add(WorkAR);
-                    //PaneS.Children.Add(WorkMN);
-                    PaneS.Children.Add(WorkRU);
-                    Grid.SetColumn(WorkEN, 0);
-                    Grid.SetColumn(WorkEN, 1);
-                    Grid.SetColumn(WorkEN, 2);
-                    Grid.SetColumn(WorkEN, 3);
+                    TextBlock error = new TextBlock { Text = "Не найден файл:"+Parsel.err[i] };
+                    Func.Children.Add(error);
+                    Grid.SetColumn(error, 0);
+                    Grid.SetRow(error, 2+(i+1)*2);
 
-                    SplitView temp = new SplitView
-                    {
-                        
-                        Background = new SolidColorBrush(Windows.UI.Colors.White),
-                        DisplayMode = SplitViewDisplayMode.Inline,
-                        CompactPaneLength = 0,
-                        OpenPaneLength = 500,
-                        PaneBackground = new SolidColorBrush(Windows.UI.Colors.LightBlue),
-                        Content = ContentS,
-                        Pane = PaneS
-                    };
-                    Sobject.Items.Add(temp);
                 }
             }
-
+            Zapoln(Lang);
         }
         private async void SaveFile_OnClick(object sender, RoutedEventArgs e)
-            {
+        {
             FolderPicker folderPicker = new FolderPicker();
             folderPicker.SuggestedStartLocation = PickerLocationId.Desktop;
             folderPicker.FileTypeFilter.Add("*");
             StorageFolder folder = await folderPicker.PickSingleFolderAsync();
+            Lang[0] = WorkEN;
+            Lang[1] = WorkAR;
+            Lang[2] = WorkMN;
+            Lang[3] = WorkRU;
+            string[] SaveText = Parsel.LOC();
             if (folder != null)
             {
-                // StorageFile FileRU = await folder.GetFileAsync("Messages-ru.lst");
-                for (int i = 0; i < CaseNameEN.Items.Count; i++)
+                string[] lang = new string[] { "", "-ar", "-mn", "-ru" };
+                for (int i = 0; i < 4; i++)
                 {
-                    string[] temp= sEN[numberEN[i]].Split('=');
-                    temp[1] = TranslEN.Items[i].ToString();
-                    sEN[numberEN[i]] = temp[0] + "=" + temp[1];
+                    try
+                    {
+                        int k = 0;
+                        string[] text = SaveText[i].Split('\n');
+                        string Save = "";
+                        for (int j = 0; j < text.Length - 1; j++)
+                        {
+                            if (text[j] != null)
+                            {
+                                if (text[j] != "\r" && text[j][0] != '#')
+                                {
+                                    string[] temptext;
+                                    temptext = text[j].Split('=');
+                                    Dictionary<string, string> temp = (Dictionary<string, string>)Lang[i];
+                                    if (i == 0) Save = Save + temptext[0] + "=" + Work1[k].Text + "\r\n";
+                                    if (i == 1) Save = Save + temptext[0] + "=" + Work2[k].Text + "\r\n";
+                                    if (i == 2) Save = Save + temptext[0] + "=" + Work3[k].Text + "\r\n";
+                                    if (i == 3) Save = Save + temptext[0] + "=" + Work4[k].Text + "\r\n";
+                                    k++;
 
-                    temp[1] = TranslAR.Items[i].ToString();
-                    sAR[numberAR[i]] = temp[0] + "=" + temp[1];
-                    //temp[1] = TranslMN.Items[i].ToString();
-                    //sMN[numberMN[i]] = temp[0] + "=" + temp[1];
-                    temp[1] = TranslRU.Items[i].ToString();
-                    sRU[numberRU[i]] = temp[0] + "=" + temp[1];
+                                }
+                                else
+                                    Save = Save + text[j] + "\n";
+
+                            }
+                            else
+                                Save = Save + null + "\n";
+                        }
+
+                        StorageFile save = await folder.CreateFileAsync("Messages1" + lang[i] + ".lst", CreationCollisionOption.ReplaceExisting);
+                        if (save != null)
+                        {
+                            CachedFileManager.DeferUpdates(save);
+                            await FileIO.WriteTextAsync(save, Save);
+                            await CachedFileManager.CompleteUpdatesAsync(save);
+                        }
+                    }
+                    catch
+                    {
+                        TextBlock error = new TextBlock { Text = "Файл не сохранён: Messages1" + lang[i] + ".lst" };
+                        Func.Children.Add(error);
+                        Grid.SetColumn(error, 0);
+                        Grid.SetRow(error, 10 + (i + 1) * 2);
+
+                    }
                 }
-
-                StorageFile saveEN = await folder.CreateFileAsync("Messages1.lst",CreationCollisionOption.ReplaceExisting);
-                string text = sEN[0];
-                for (int i = 1; i < sEN.Length; i++)
-                    text = text + "\n" + sEN[i];
-                await FileIO.WriteTextAsync(saveEN, text);
-                StorageFile saveAR = await folder.CreateFileAsync("Messages-ar1.lst", CreationCollisionOption.ReplaceExisting);
-                text = sAR[0];
-                for (int i = 1; i < sAR.Length; i++)
-                    text = text + "\n" + sAR[i];
-                await FileIO.WriteTextAsync(saveAR, text);
-                StorageFile saveMN = await folder.CreateFileAsync("Messages-mn1.lst", CreationCollisionOption.ReplaceExisting);
-                text = sMN[0];
-                for (int i = 1; i < sMN.Length; i++)
-                    text = text + "\n" + sMN[i];
-                await FileIO.WriteTextAsync(saveMN, text);
-                StorageFile saveRU = await folder.CreateFileAsync("Messages-ru1.lst", CreationCollisionOption.ReplaceExisting);
-                text = sRU[0];
-                for (int i = 1; i < sRU.Length; i++)
-                    text = text + "\n" + sRU[i];
-                await FileIO.WriteTextAsync(saveRU, text);
             }
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
+
+        private void Zapoln(ArrayList Lang)
         {
-           SplitView temp = (SplitView)Sobject.Items[1];
-           temp.IsPaneOpen = !temp.IsPaneOpen;
-            Sobject.Items.Insert(1, temp);
+            
+            int k = 0;
+            for (int i = 0; i < Lang.Count; i++)
+            {
+                ICollection<string> c;
+                if (i == 0)
+                {
+                    WorkEN = (Dictionary<string, string>)Lang[i];
+                    c = WorkEN.Keys;
+                    Work1 = new TextBox[WorkEN.Count];
+
+                }
+                else if (i == 1)
+                {
+                    WorkAR = (Dictionary<string, string>)Lang[i];
+                    c = WorkAR.Keys;
+                    Work2 = new TextBox[WorkAR.Count];
+                }
+                else if (i == 2)
+                {
+                    WorkMN = (Dictionary<string, string>)Lang[i];
+                    c = WorkMN.Keys;
+                    Work3 = new TextBox[WorkMN.Count];
+                }
+                else
+                {
+                    WorkRU = (Dictionary<string, string>)Lang[i];
+                    c = WorkRU.Keys;
+                    Work4 = new TextBox[WorkRU.Count];
+                }
+                TextBox[] Work11 = new TextBox[WorkEN.Count];
+                StackPanel Column0 = new StackPanel() { Orientation = Orientation.Vertical };
+                StackPanel Column1 = new StackPanel() { Orientation = Orientation.Vertical };
+                Table.Children.Add(Column0);
+                Table.Children.Add(Column1);
+                Grid.SetColumn(Column0, k);
+                Grid.SetRow(Column0, 1);
+                k++;
+                Grid.SetColumn(Column1, k);
+                Grid.SetRow(Column1, 1);
+                int j = 0;
+                foreach (string str in c)
+                {
+                    TextBlock Work = new TextBlock() { Text = str, TextAlignment= TextAlignment.Center};
+                    Thickness myThickness = new Thickness();
+                    myThickness.Bottom = 6;
+                    myThickness.Left = 0;
+                    myThickness.Right = 0;
+                    myThickness.Top = 6;
+                    Work.Margin = myThickness;
+                    Column0.Children.Add(Work);
+                    if (i == 0)
+                    {
+                        Work1[j] = new TextBox();
+                        Work1[j].Text = WorkEN[str];
+                        Column1.Children.Add(Work1[j]);
+                    }
+                    if (i == 1)
+                    {
+                        Work2[j] = new TextBox();
+                        Work2[j].Text = WorkAR[str];
+                        Column1.Children.Add(Work2[j]);
+                    }
+                    if (i == 2)
+                    {
+                        Work3[j] = new TextBox();
+                        Work3[j].Text = WorkMN[str];
+                        Column1.Children.Add(Work3[j]);
+                    }
+                    if (i == 3)
+                    {
+                        Work4[j] = new TextBox();
+                        Work4[j].Text = WorkRU[str];
+                        Column1.Children.Add(Work4[j]);
+                    }
+                    j++;
+
+                }
+                k++;
+            }
         }
     }
 }
